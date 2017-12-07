@@ -8,15 +8,69 @@
 <PROPERTY>short = </PROPERTY>
 
 <VARIABLE TYPE="nature">
-	<NAME>Charging System OK (CS)</NAME>
-	<OUTCOME>T</OUTCOME>
-	<OUTCOME>F</OUTCOME>
-	<PROPERTY>position = (7324.0, 5105.0)</PROPERTY>
+	<NAME>Charging System OK</NAME>
+	<OUTCOME>true</OUTCOME>
+	<OUTCOME>false</OUTCOME>
+	<PROPERTY>position = (7653.0, 5051.0)</PROPERTY>
+</VARIABLE>
+
+<VARIABLE TYPE="nature">
+	<NAME>Battery Age</NAME>
+	<OUTCOME>new</OUTCOME>
+	<OUTCOME>old</OUTCOME>
+	<OUTCOME>very_old</OUTCOME>
+	<PROPERTY>position = (7247.0, 5058.0)</PROPERTY>
+</VARIABLE>
+
+<VARIABLE TYPE="nature">
+	<NAME>Battery Voltage</NAME>
+	<OUTCOME>strong</OUTCOME>
+	<OUTCOME>weak</OUTCOME>
+	<OUTCOME>dead</OUTCOME>
+	<PROPERTY>position = (7437.0, 5162.0)</PROPERTY>
+</VARIABLE>
+
+<VARIABLE TYPE="nature">
+	<NAME>Voltage at Plug</NAME>
+	<OUTCOME>high</OUTCOME>
+	<OUTCOME>low</OUTCOME>
+	<PROPERTY>position = (7264.0, 5291.0)</PROPERTY>
+</VARIABLE>
+
+<VARIABLE TYPE="nature">
+	<NAME>Starter System OK</NAME>
+	<OUTCOME>true</OUTCOME>
+	<OUTCOME>false</OUTCOME>
+	<PROPERTY>position = (7670.0, 5303.0)</PROPERTY>
 </VARIABLE>
 
 <DEFINITION>
-	<FOR>Charging System OK (CS)</FOR>
-	<TABLE>0.5 0.5</TABLE>
+	<FOR>Charging System OK</FOR>
+	<TABLE>0.99 0.01</TABLE>
+</DEFINITION>
+
+<DEFINITION>
+	<FOR>Battery Age</FOR>
+	<TABLE>0.4 0.4 0.2</TABLE>
+</DEFINITION>
+
+<DEFINITION>
+	<FOR>Battery Voltage</FOR>
+	<GIVEN>Charging System OK</GIVEN>
+	<GIVEN>Battery Age</GIVEN>
+	<TABLE>0.99 0.005 0.005 0.8 0.01 0.19 0.6 0.3 0.1 0.8 0.15 0.05 0.05 0.3 0.65 0.002 0.1 0.898</TABLE>
+</DEFINITION>
+
+<DEFINITION>
+	<FOR>Voltage at Plug</FOR>
+	<GIVEN>Battery Voltage</GIVEN>
+	<TABLE>0.9 0.1 0.2 0.8 0.0 1.0</TABLE>
+</DEFINITION>
+
+<DEFINITION>
+	<FOR>Starter System OK</FOR>
+	<GIVEN>Battery Voltage</GIVEN>
+	<TABLE>0.99 0.01 0.7 0.3 0.0 1.0</TABLE>
 </DEFINITION>
 </NETWORK>
 </BIF>
