@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<BIF VERSION="0.3"  xmlns="http://www.cs.ubc.ca/labs/lci/fopi/ve/XMLBIFv0_3"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.cs.ubc.ca/labs/lci/fopi/ve/XMLBIFv0_3 http://www.cs.ubc.ca/labs/lci/fopi/ve/XMLBIFv0_3/XMLBIFv0_3.xsd">
+<NETWORK>
+<NAME>Untitled</NAME>
+<PROPERTY>detailed = </PROPERTY>
+<PROPERTY>short = </PROPERTY>
+
+<VARIABLE TYPE="nature">
+	<NAME>Visibility</NAME>
+	<OUTCOME>high</OUTCOME>
+	<OUTCOME>low</OUTCOME>
+	<PROPERTY>position = (7666.0, 5179.0)</PROPERTY>
+</VARIABLE>
+
+<VARIABLE TYPE="nature">
+	<NAME>Weather</NAME>
+	<OUTCOME>sunny</OUTCOME>
+	<OUTCOME>overcast</OUTCOME>
+	<OUTCOME>raining</OUTCOME>
+	<PROPERTY>position = (7799.0, 5106.0)</PROPERTY>
+</VARIABLE>
+
+<VARIABLE TYPE="nature">
+	<NAME>Roadwork</NAME>
+	<OUTCOME>T</OUTCOME>
+	<OUTCOME>F</OUTCOME>
+	<PROPERTY>position = (7281.0, 5174.0)</PROPERTY>
+</VARIABLE>
+
+<VARIABLE TYPE="nature">
+	<NAME>Roadwork Information</NAME>
+	<OUTCOME>updated</OUTCOME>
+	<OUTCOME>out_of_date</OUTCOME>
+	<PROPERTY>position = (7130.0, 5263.0)</PROPERTY>
+</VARIABLE>
+
+<VARIABLE TYPE="nature">
+	<NAME>Time</NAME>
+	<OUTCOME>peak</OUTCOME>
+	<OUTCOME>off_peak</OUTCOME>
+	<PROPERTY>position = (7603.0, 5088.0)</PROPERTY>
+</VARIABLE>
+
+<VARIABLE TYPE="nature">
+	<NAME>Day Type</NAME>
+	<OUTCOME>working_day</OUTCOME>
+	<OUTCOME>holiday</OUTCOME>
+	<PROPERTY>position = (7315.0, 5093.0)</PROPERTY>
+</VARIABLE>
+
+<VARIABLE TYPE="nature">
+	<NAME>Visibility Information</NAME>
+	<OUTCOME>correct</OUTCOME>
+	<OUTCOME>wrong</OUTCOME>
+	<PROPERTY>position = (7779.0, 5275.0)</PROPERTY>
+</VARIABLE>
+
+<VARIABLE TYPE="nature">
+	<NAME>Alert</NAME>
+	<OUTCOME>T</OUTCOME>
+	<OUTCOME>F</OUTCOME>
+	<PROPERTY>position = (7345.0, 5391.0)</PROPERTY>
+</VARIABLE>
+
+<VARIABLE TYPE="nature">
+	<NAME>Traffic Congestion</NAME>
+	<OUTCOME>T</OUTCOME>
+	<OUTCOME>F</OUTCOME>
+	<PROPERTY>position = (7468.0, 5276.0)</PROPERTY>
+</VARIABLE>
+
+<VARIABLE TYPE="nature">
+	<NAME>Traffic Flow</NAME>
+	<OUTCOME>high</OUTCOME>
+	<OUTCOME>low</OUTCOME>
+	<PROPERTY>position = (7467.0, 5182.0)</PROPERTY>
+</VARIABLE>
+
+<DEFINITION>
+	<FOR>Visibility</FOR>
+	<GIVEN>Weather</GIVEN>
+	<TABLE>1.0 0.0 0.4 0.6 0.2 0.8</TABLE>
+</DEFINITION>
+
+<DEFINITION>
+	<FOR>Weather</FOR>
+	<TABLE>0.1 0.3333 0.5667</TABLE>
+</DEFINITION>
+
+<DEFINITION>
+	<FOR>Roadwork</FOR>
+	<TABLE>0.1 0.9</TABLE>
+</DEFINITION>
+
+<DEFINITION>
+	<FOR>Roadwork Information</FOR>
+	<GIVEN>Roadwork</GIVEN>
+	<TABLE>0.97 0.03 0.97 0.03</TABLE>
+</DEFINITION>
+
+<DEFINITION>
+	<FOR>Time</FOR>
+	<TABLE>0.33 0.67</TABLE>
+</DEFINITION>
+
+<DEFINITION>
+	<FOR>Day Type</FOR>
+	<TABLE>0.75 0.25</TABLE>
+</DEFINITION>
+
+<DEFINITION>
+	<FOR>Visibility Information</FOR>
+	<GIVEN>Visibility</GIVEN>
+	<TABLE>0.99 0.01 0.99 0.01</TABLE>
+</DEFINITION>
+
+<DEFINITION>
+	<FOR>Alert</FOR>
+	<GIVEN>Traffic Congestion</GIVEN>
+	<TABLE>0.5 0.5 0.5 0.5</TABLE>
+</DEFINITION>
+
+<DEFINITION>
+	<FOR>Traffic Congestion</FOR>
+	<GIVEN>Visibility</GIVEN>
+	<GIVEN>Roadwork</GIVEN>
+	<GIVEN>Traffic Flow</GIVEN>
+	<TABLE>0.4999 0.5001 0.4999 0.5001 0.4999 0.5001 0.4999 0.5001 0.4999 0.5001 0.4999 0.5001 0.4999 0.5001 0.4999 0.5001</TABLE>
+</DEFINITION>
+
+<DEFINITION>
+	<FOR>Traffic Flow</FOR>
+	<GIVEN>Time</GIVEN>
+	<GIVEN>Day Type</GIVEN>
+	<TABLE>0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5</TABLE>
+</DEFINITION>
+</NETWORK>
+</BIF>
