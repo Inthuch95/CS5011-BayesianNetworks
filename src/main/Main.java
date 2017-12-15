@@ -1,20 +1,12 @@
 package main;
 
-import org.encog.ml.bayesian.BayesianEvent;
-import org.encog.ml.bayesian.BayesianNetwork;
-import org.encog.ml.bayesian.EventType;
-import org.encog.ml.bayesian.query.enumerate.EnumerationQuery;
-
 import agent.Agent;
 import agent.ExpertAgentAssistant;
-
-import org.encog.ml.bayesian.bif.BIFUtil;
 
 public class Main {
 
 	public static void main(String[] args) {
-		String file = args[0];
-		Agent agent = new Agent(file);
+		Agent agent = new Agent("prob2.xml");
 		ExpertAgentAssistant eaa = new ExpertAgentAssistant(agent);
 		eaa.run();
 		

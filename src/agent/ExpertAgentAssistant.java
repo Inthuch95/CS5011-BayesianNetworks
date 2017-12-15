@@ -1,8 +1,10 @@
 package agent;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 
+import org.encog.ml.bayesian.BayesianChoice;
 import org.encog.ml.bayesian.BayesianEvent;
 import org.encog.ml.bayesian.BayesianNetwork;
 
@@ -16,7 +18,7 @@ public class ExpertAgentAssistant {
 	
 	public void run() {
 		this.getQueryType();
-		this.getObservation();
+		this.getObservations();
 		agent.makeQuery();
 	}
 	
@@ -27,9 +29,7 @@ public class ExpertAgentAssistant {
 		agent.setQueryType(queryType);
 	}
 	
-	private void getObservation() {
-		BayesianNetwork network = agent.getNetwork(); 
-		ArrayList<BayesianEvent> evidence = this.agent.getEvidence();
+	private void getObservations() {
 		String userInput = "";
 		String[] observation;
 		while(true) {
@@ -39,9 +39,22 @@ public class ExpertAgentAssistant {
 				break;
 			}
 			observation = userInput.split("\\s+");
-			BayesianEvent node = network.getEvent(observation[0]);
-			evidence.add(node);
+			this.createObservationMap(observation);
 		}
-		System.out.println(evidence);
+	}
+	
+	private void createObservationMap(String[] observation) {
+		HashMap<String, Integer> evidence = this.agent.getEvidence();
+		BayesianNetwork network = agent.getNetwork(); 
+		BayesianEvent node = network.getEvent(observation[0]);
+		ArrayList<BayesianChoice> choices = new ArrayList<BayesianChoice>();
+		int choiceNumber = 0;
+		choices.addAll(node.getChoices());
+		for (BayesianChoice choice: choices) {
+			if (choice.toString().equals(observation[1])) {
+				choiceNumber = choices.indexOf(choice);
+			}
+		}
+		evidence.put(observation[0], choiceNumber);
 	}
 }
