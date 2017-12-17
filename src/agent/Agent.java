@@ -44,14 +44,24 @@ public class Agent {
 		}
 	}
 	private void defineOutcome() {
-	    for (String label : this.evidence.keySet()) {
+	    Set<BayesianEvent> evidenceSet = new HashSet<BayesianEvent>();
+	    ArrayList<BayesianEvent> removeList = new ArrayList<BayesianEvent>();
+		for (String label : this.evidence.keySet()) {
 	    	// make diagnostic or predictive query based on the user's choice
 	    	if (this.queryType.equals("diagnostic")) {
 	    		this.outcome.addAll(this.network.getEvent(label).getParents());
 	    	} else {
 	    		this.outcome.addAll(this.network.getEvent(label).getChildren());
 	    	}
+	    	evidenceSet.add(this.network.getEvent(label));
 	    }
+	    // remove node(s) from outcome if they are being observed
+	    for (BayesianEvent outcomeNode: this.outcome) {
+	    	if (evidenceSet.contains(outcomeNode)) {
+	    		removeList.add(outcomeNode);
+	    	}
+	    }
+	    this.outcome.removeAll(removeList);
 	}
 	
 	private void executeQuery() {

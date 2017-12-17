@@ -17,8 +17,8 @@ public class ExpertAgentAssistant {
 	}
 	
 	public void run() {
-		this.getQueryType();
 		this.getObservations();
+		this.getQueryType();
 		agent.makeQuery();
 	}
 	
@@ -27,34 +27,53 @@ public class ExpertAgentAssistant {
 		System.out.println("What type of query would you like to make? (diagnostic/predictive)");
 		String queryType =this.scanner.nextLine();
 		agent.setQueryType(queryType);
+		if (!queryType.equals("diagnostic") && !queryType.equals("predictive")) {
+			System.out.println("Unsupoorted query type!");
+			this.getQueryType();
+		}
 	}
 	
 	private void getObservations() {
 		String userInput = "";
 		String[] observation;
+		String nodeLabel;
+		String nodeValue;
+		boolean choiceMatched = false;
+		int choiceIndex;
+		System.out.println("Make observation(s)");
+        System.out.println("Usage: ");
+        System.out.printf("%-30s %29s", "node, value", "Make observation about a node\n");
+        System.out.printf("%-30s %22s", "done", "Confirm observation(s)\n\n");
 		while(true) {
-			System.out.println("Do you want to add more observation? (node value)");
-			userInput = this.scanner.nextLine();
-			if (userInput.equals("done")) {
-				break;
+			try {
+				userInput = this.scanner.nextLine();
+				if (userInput.equals("done")) {
+					break;
+				}
+				observation = userInput.split("\\s*,\\s*");
+				nodeLabel = observation[0];
+				nodeValue = observation[1];
+				ArrayList<BayesianChoice> choices = new ArrayList<BayesianChoice>();
+				choices.addAll(this.agent.getNetwork().getEvent(nodeLabel).getChoices());
+				for (BayesianChoice choice: choices) {
+					if (choice.toString().equals(nodeValue)) {
+						choiceIndex = choices.indexOf(choice);
+						choiceMatched = true;
+						this.createObservationMap(nodeLabel, choiceIndex);
+					}
+				}
+				if (!choiceMatched) {
+					System.out.println("Invalid command!");
+				}
+				choiceMatched = false;
+			} catch (Exception e) {
+				System.out.println("Invalid command!");
 			}
-			observation = userInput.split("\\s+");
-			this.createObservationMap(observation);
 		}
 	}
 	
-	private void createObservationMap(String[] observation) {
+	private void createObservationMap(String nodeLabel, int choiceIndex) {
 		HashMap<String, Integer> evidence = this.agent.getEvidence();
-		BayesianNetwork network = agent.getNetwork(); 
-		BayesianEvent node = network.getEvent(observation[0]);
-		ArrayList<BayesianChoice> choices = new ArrayList<BayesianChoice>();
-		int choiceNumber = 0;
-		choices.addAll(node.getChoices());
-		for (BayesianChoice choice: choices) {
-			if (choice.toString().equals(observation[1])) {
-				choiceNumber = choices.indexOf(choice);
-			}
-		}
-		evidence.put(observation[0], choiceNumber);
+		evidence.put(nodeLabel, choiceIndex);
 	}
 }
