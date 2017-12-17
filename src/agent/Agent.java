@@ -8,12 +8,14 @@ import org.encog.ml.bayesian.query.enumerate.EnumerationQuery;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public class Agent {
 	private BayesianNetwork network;
 	private HashMap<String, Integer> evidence = new HashMap<String, Integer>(); 
-	private ArrayList<BayesianEvent> outcome = new ArrayList<BayesianEvent>(); 
+	private Set<BayesianEvent> outcome = new HashSet<BayesianEvent>(); 
 	private String queryType;
 	private EnumerationQuery query;
 	
@@ -23,27 +25,48 @@ public class Agent {
 	
 	public void makeQuery() {
 		this.query = new EnumerationQuery(this.network);
-		// define evidence and outcome
+		// define evidence and outcome, then execute the query
 		this.defineEvidence();
 		this.defineOutcome();
-		query.execute();
-		System.out.println(query.getProblem());
-		System.out.println(query.toString());
+		this.executeQuery();
 	}
 	
 	private void defineEvidence() {
+		BayesianEvent evidenceNode;
+		String key;
+		int value;
 		for (Map.Entry<String, Integer> entry : this.evidence.entrySet()) {
-		    String key = entry.getKey();
-		    int value = entry.getValue();
-		    BayesianEvent event = this.network.getEvent(key);
-		    query.defineEventType(event, EventType.Evidence);
-		    query.setEventValue(event, value);
+		    key = entry.getKey();
+		    value = entry.getValue();
+		    evidenceNode = this.network.getEvent(key);
+		    query.defineEventType(evidenceNode, EventType.Evidence);
+		    query.setEventValue(evidenceNode, value);
 		}
 	}
 	private void defineOutcome() {
-		BayesianEvent fever = this.network.getEvent("Fever");
-	    query.defineEventType(fever, EventType.Outcome);
-	    query.setEventValue(fever, 0);
+	    for (String label : this.evidence.keySet()) {
+	    	// make diagnostic or predictive query based on the user's choice
+	    	if (this.queryType.equals("diagnostic")) {
+	    		this.outcome.addAll(this.network.getEvent(label).getParents());
+	    	} else {
+	    		this.outcome.addAll(this.network.getEvent(label).getChildren());
+	    	}
+	    }
+	}
+	
+	private void executeQuery() {
+		ArrayList<BayesianEvent> outcomeList = new ArrayList<BayesianEvent>();
+		outcomeList.addAll(this.outcome);
+		for (int i = 0; i < outcomeList.size(); i++) {
+	    	if (i > 0) {
+	    		query.defineEventType(outcomeList.get(i - 1), EventType.Hidden);
+	    	}
+			query.defineEventType(outcomeList.get(i), EventType.Outcome);
+	    	query.setEventValue(outcomeList.get(i), 0);
+	    	query.execute();
+			System.out.println(query.getProblem());
+			System.out.println(query.toString());
+	    }
 	}
 
 	public String getQueryType() {
@@ -62,19 +85,19 @@ public class Agent {
 		this.evidence = evidence;
 	}
 
-	public ArrayList<BayesianEvent> getOutcome() {
-		return outcome;
-	}
-
-	public void setOutcome(ArrayList<BayesianEvent> outcome) {
-		this.outcome = outcome;
-	}
-
 	public BayesianNetwork getNetwork() {
 		return network;
 	}
 
 	public void setNetwork(BayesianNetwork network) {
 		this.network = network;
+	}
+
+	public Set<BayesianEvent> getOutcome() {
+		return outcome;
+	}
+
+	public void setOutcome(Set<BayesianEvent> outcome) {
+		this.outcome = outcome;
 	}
 }
